@@ -1,0 +1,4 @@
+# Fix GitHub indentation [worked]
+[*.{c,cpp,h}]
+indent_style = tab
+indent_size = 4
