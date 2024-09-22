@@ -1,88 +1,88 @@
-## Description
+## Описание
 
-Script to redirect all traffic through the `Tor` network, including DNS-requests for anonymize entire system.
-This version of the script supports adding bridges (input nodes) in case you have problems connecting to the `Tor` network.  
-Bridging protocols camouflage `Tor` traffic, allowing it to pass through censored networks.
+Скрипт для перенаправления всего трафика через сеть `Tor`, включая DNS-запросы для анонимизации всей системы.
+Эта версия скрипта поддерживает добавление мостов (входных нод) на случай, если у вас возникнут проблемы с подключением к сети `Tor`.
+Протоколы мостов камуфлируют трафик `Tor` позволяя ему проходить через цензурируемые сети.
 
-Currently supported bridge types:
+На данный момент поддерживаются типы мостов:
 - obfs4
 - snowflake
 - webtunnel
 
-## Installation
 
-1. Install `Tor` and client-plugins for connecting to bridges of `Tor` network 
-(`webtunnel` plugin is included in the `torctl-bridged` package):
+## Установка
+
+1. Установить `Tor` и клиент-плагины для подключения к мостам сети `Tor` 
+(плагин `webtunnel` включен в состав пакета `torctl-bridged`):
+
 ```sh
 $> sudo apt install tor obfs4proxy snowflake-client
 ```
 
-2. Download the `torctl-bridged` deb-package and the `SHA256SUMS` checksum file from the [Release][release-url] section. Install the `torctl-bridged` package:
+2. Скачать deb-пакет `torctl-bridged` и файл контрольной суммы `SHA256SUMS` из раздела [Release][release-url]. Установить пакет `torctl-bridged`:
 
 ```sh
-# Check package checksum:
+# Проверить контрольную сумму пакета:
 $> sha256sum -c SHA256SUMS
 
-# Install package:
+# Установить пакет:
 $> sudo apt install ./torctl_0.5.7-bridged_amd64.deb
--OR-
+-ИЛИ-
 $> sudo dpkg -i ./torctl_0.5.7-bridged_amd64.deb
 
-# Remove package:
+# Для удаления пакета выполнить:
 $> sudo apt purge torctl
--OR-
+-ИЛИ-
 $> sudo dpkg --purge torctl
 
 ```
 
-## Usage
+## Использование
 
-* ### Start `torctl` without bridges
+* ###  Запуск `torctl` без мостов
 
 ```sh
 $> sudo torctl start
 ```
 
-* ### Start `torctl` with bridges
+* ###  Запуск `torctl` с мостами
 
-Create a file with bridge addresses, for example `1.bridges`:
+Создайте файл с адресами мостов, например `1.bridges`:
 
 ```sh
 obfs4 151.67.213.75:8080 0D0E74E2FDE5C41D16F8C79969E37E8978AD066C cert=nE2vFIzUzjoyUstscXBFKe88SjlM/IIwR9+AddX7uCyoIXwe26d2c3TzypCqeLjfdoWRYg iat-mode=0
 obfs4 185.192.124.64:993 978180445CF4B1748DBD2FEE550F93BE8C117AF9 cert=bfZhNvbOb4XNnpY7htuwQv5Folg6uNmQzT7OQIwN5H9QeRHVjMPPjhk+VvPL5b+xb5A3GQ iat-mode=0
 ```
-- The bridge file name can be any
-- Each bridge address is added to the file on a **new line**
-- The number of addresses in the file is unlimited
-- Bridge addresses of different types can be in one file
-- Addresses of bridges can be obtained on the website [torproject.org][bridges-url]  
-or to your **e-mail** by sending a letter **with empty subject** to bridges@torproject.org and the message **"get transport obfs4"**
-  > Please note that letters are accepted only from the `Riseup` or `Gmail` servers.
+- Имя файла мостов может быть любым
+- Адрес каждого моста добавляется в файл с новой строки
+- Количество адресов в файле неограничено
+- Адреса мостов разных типов могут быть в одном файле
+- Адреса мостов можно получить на сайте [torproject.org][bridges-url] или на свой **e-mail** отправив письмо **с пустой темой** на bridges@torproject.org и сообщением **"get transport obfs4"**.
+Обратите внимание, письма принимаются только с серверов `Riseup` или `Gmail`.
 
-Next, use the created bridges file when you start `torctl`:
-
+Далее, используйте созданный файл при запуске `torctl`:
 ```sh
 $> sudo torctl start --bridges ./1.bridges
 ```
 
-* ###  Restart `torctl` with bridges
+* ###  Перезапуск `torctl` с мостами
 
 ```sh
 $> sudo torctl restart --bridges ./1.bridges
 ```
 
-* ###  Stop `torctl`
+* ###  Остановка `torctl`
 
 ```sh
 $> sudo torctl stop
 ```
-* ### Log of `Tor` work
+* ### Журнал работы `Tor`
 ```sh
 $> sudo journalctl -f -u tor@default
-<Ctrl + C> - abort
+<Ctrl + C> - прервать
 ```
 
-### All `torctl` commands
+###  Все команды `torctl`
 
 ```sh
 $ torctl
@@ -109,14 +109,14 @@ Commands:
 
 ```
 
-### Building the `torctl` package
+### Сборка пакета `torctl`
 
-If you intend to modify the `torctl` script and create your own deb-package based on it, then in the [build][build-url] directory you will find the `make-deb.sh` script that will help you with this.
+Если вы намерены изменить скрипт `torctl` и создать на его основе свой deb-пакет то в директории [build][build-url] вы найдете скрипт `make-deb.sh` который поможет вам в этом.
 
-### Adding a Tor repository
+### Добавление репозитория Tor
 
-To get the latest versions of `Tor`, add the [torproject][torproject-url] repository to your system.  
-**[IMPORTANT]** The [torproject.org][torproject-url] resource must be available in your region/country.
+Для получения свежих версий `Tor`, добавьте репозиторий [torproject][torproject-url] в свою систему.  
+**[ВАЖНО]** Ресурс [torproject.org][torproject-url] должен быть доступен в вашем регионе/стране.
 
 ```sh
 ### Get utilities ###
@@ -166,3 +166,5 @@ You can get in touch with the BlackArch Linux team. Just check out the following
 [build-url]: https://github.com/JohnMcLaren/torctl-bridged/tree/master/build/
 [bridges-url]: https://bridges.torproject.org/options
 [torproject-url]: https://www.torproject.org/
+
+
