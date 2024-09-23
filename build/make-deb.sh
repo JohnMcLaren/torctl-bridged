@@ -8,7 +8,8 @@ DEBNAME="torctl"
 DEBVERSION="0.5.7-bridged"
 DEBARCH="amd64"
 DEBDESCRIPTION="Script to redirect all traffic through Tor network including DNS queries for anonymizing entire system. \
-This version of the script supports adding bridges (input nodes) in case you have problems connecting to the Tor network."
+ This version of the script supports adding bridges (input nodes) in case you have problems connecting to the Tor network."
+DEBHOMEPAGE="https://github.com/JohnMcLaren/torctl-bridged/"
 DEBDIR="$DEBNAME"_"$DEBVERSION"_"$DEBARCH"
 
 echo "--- build: $DEBDIR.deb ---"
@@ -36,11 +37,13 @@ mkdir -p $DEBDIR/DEBIAN
 cat > "$DEBDIR/DEBIAN/control" << EOF
 Package: $DEBNAME
 Version: $DEBVERSION
+Section: Networking
 Priority: optional
 Architecture: $DEBARCH
-Depends: 
+Depends: tor
 Maintainer: $DEBFULLNAME <$DEBEMAIL>
 Description: $DEBDESCRIPTION
+Homepage: $DEBHOMEPAGE
 EOF
 
 ### Build deb package ###
