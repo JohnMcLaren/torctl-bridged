@@ -1,0 +1,3 @@
+[submodule "PT/webtunnel"]
+	path = PT/webtunnel
+	url = https://gitlab.torproject.org/tpo/anti-censorship/pluggable-transports/webtunnel.git

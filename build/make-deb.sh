@@ -32,7 +32,7 @@ mkdir -p $DEBDIR/usr/local/bin/
 
 cp -r ../service/* $DEBDIR/etc/systemd/system/
 cp ../bash-completion/torctl $DEBDIR/usr/share/bash-completion/completions/torctl
-cp ../webtunnel/release/build/-/webtunnel-client $DEBDIR/usr/local/bin/webtunnel-client 2>/dev/null || echo "[WARN] The webtunnel-client plugin was not found and will not be included in this release package."
+cp ../PT/webtunnel/release/build/-/webtunnel-client $DEBDIR/usr/local/bin/webtunnel-client 2>/dev/null || echo "[WARN] The webtunnel-client plugin was not found and will not be included in this release package."
 cp ../torctl $DEBDIR/usr/local/bin/
 
 ### Patch TOR_UID & shell version ###
