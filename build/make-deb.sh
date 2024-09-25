@@ -4,16 +4,24 @@ TOR_UID="debian-tor"
 
 DEBFULLNAME=""
 DEBEMAIL=""
-DEBNAME="torctl"
-DEBVERSION="0.5.7-bridged"
-DEBARCH="amd64"
+DEBNAME="torctl-bridged"
+DEBVERSION="0.5.7-1"
+DEBSECTION="Networking"
+DEBHOMEPAGE="https://github.com/JohnMcLaren/torctl-bridged/"
+DEBARCH="amd64" # List all: dpkg-architecture -L
+DEBDEPENDS="tor,iptables"
+DEBRECOMMENDS="obfs4proxy|snowflake-client"
+DEBSUGGESTS=""
+DEBCONFLICTS=""
+DEBREPLACES="torctl"
 DEBDESCRIPTION="Script to redirect all traffic through Tor network including DNS queries for anonymizing entire system. \
  This version of the script supports adding bridges (input nodes) in case you have problems connecting to the Tor network."
-DEBHOMEPAGE="https://github.com/JohnMcLaren/torctl-bridged/"
 DEBDIR="$DEBNAME"_"$DEBVERSION"_"$DEBARCH"
 
 echo "--- build: $DEBDIR.deb ---"
 set -e
+rm -rf SHA256SUMS
+
 ### Create directories ###
 
 mkdir -p $DEBDIR/etc/systemd/system/
@@ -27,23 +35,29 @@ cp ../bash-completion/torctl $DEBDIR/usr/share/bash-completion/completions/torct
 cp ../webtunnel/release/build/-/webtunnel-client $DEBDIR/usr/local/bin/webtunnel-client 2>/dev/null || echo "[WARN] The webtunnel-client plugin was not found and will not be included in this release package."
 cp ../torctl $DEBDIR/usr/local/bin/
 
-### Patch TOR_UID ###
+### Patch TOR_UID & shell version ###
 
-find $DEBDIR/usr/local/bin/ -name $DEBNAME -type f -exec sed -i 's/TOR_UID="tor"/TOR_UID="'$TOR_UID'"/' {} \;
+sed -i $DEBDIR/usr/local/bin/torctl \
+    -e 's/VERSION=".*"/VERSION="torctl.sh v'$DEBVERSION' (bridged)"/' \
+    -e 's/TOR_UID="tor"/TOR_UID="'$TOR_UID'"/'
 
 ### Create Debian control file ###
 
 mkdir -p $DEBDIR/DEBIAN
-cat > "$DEBDIR/DEBIAN/control" << EOF
+cat << EOF | grep ': ..*' | tee "$DEBDIR/DEBIAN/control"
 Package: $DEBNAME
 Version: $DEBVERSION
-Section: Networking
-Priority: optional
-Architecture: $DEBARCH
-Depends: tor
 Maintainer: $DEBFULLNAME <$DEBEMAIL>
 Description: $DEBDESCRIPTION
+Section: $DEBSECTION
+Priority: optional
+Architecture: $DEBARCH
 Homepage: $DEBHOMEPAGE
+Depends: $DEBDEPENDS
+Recommends: $DEBRECOMMENDS
+Suggests: $DEBSUGGESTS
+Conflicts: $DEBCONFLICTS
+Replaces: $DEBREPLACES
 EOF
 
 ### Build deb package ###
@@ -52,7 +66,7 @@ dpkg-deb --build --root-owner-group $DEBDIR
 
 ### Create package/s checksum ###
 
-sha256sum $DEBDIR.deb > SHA256SUMS
+sha256sum $DEBDIR.deb >> SHA256SUMS
 
 ### Cleanup ###
 
