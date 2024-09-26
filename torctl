@@ -150,10 +150,29 @@ wipe() {
     echo 0 >/proc/sys/vm/oom_dump_tasks
     smem-secure-delete -fllv
 }
+# Returns the key value in a json object
+# where, $1 - json object, $2 - key
+get_json_value() {
+	echo $1 | jq -r ".$2 // empty" 2> /dev/null
+
+	if [[ $? == 127 ]] then # [ERR: 127] if prev command not found
+		echo $1 | awk 'BEGIN { FS="\""; RS="," }; { if ($2 == "'$2'") { print $4 } }'
+	fi
+}
 
 get_ip() {
-    RADDR=$(curl -s https://ident.me/)
-    msg "remote ip: $RADDR"
+	JSON=$(curl -s https://ident.me/json)
+	IP=$(get_json_value "$JSON" "ip")
+
+	if [[ -n $IP ]] then
+		COUNTRY=$(get_json_value "$JSON" "country") && [[ ${COUNTRY:="Unknown"} ]]
+		CITY=$(get_json_value "$JSON" "city") && [[ ${CITY:="Unknown"} ]]
+		ASO=$(get_json_value "$JSON" "aso")
+
+    	msg "remote ip: $IP | $COUNTRY / $CITY | \"$ASO\""
+	else
+		err "service unavailable"
+	fi
 }
 
 show_bridges() {
