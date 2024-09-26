@@ -99,6 +99,7 @@ Commands:
   status                   - get tor service status
   restart                  - restart tor and traffic rules
   restart --bridges <file> - restart tor with bridges
+  bridges                  - print used bridges
   autowipe                 - enable memory wipe at shutdown
   autostart                - start torctl at startup
   ip                       - get remote ip address

@@ -153,26 +153,26 @@ wipe() {
 # Returns the key value in a json object
 # where, $1 - json object, $2 - key
 get_json_value() {
-	echo $1 | jq -r ".$2 // empty" 2> /dev/null
+    echo $1 | jq -r ".$2 // empty" 2> /dev/null
 
-	if [[ $? == 127 ]] then # [ERR: 127] if prev command not found
-		echo $1 | awk 'BEGIN { FS="\""; RS="," }; { if ($2 == "'$2'") { print $4 } }'
-	fi
+    if [[ $? == 127 ]] then # [ERR: 127] if prev command not found
+        echo $1 | awk 'BEGIN { FS="\""; RS="," }; { if ($2 == "'$2'") { print $4 } }'
+    fi
 }
 
 get_ip() {
-	JSON=$(curl -s https://ident.me/json)
-	IP=$(get_json_value "$JSON" "ip")
+    JSON=$(curl -s https://ident.me/json)
+    IP=$(get_json_value "$JSON" "ip")
 
-	if [[ -n $IP ]] then
-		COUNTRY=$(get_json_value "$JSON" "country") && [[ ${COUNTRY:="Unknown"} ]]
-		CITY=$(get_json_value "$JSON" "city") && [[ ${CITY:="Unknown"} ]]
-		ASO=$(get_json_value "$JSON" "aso")
+    if [[ -n $IP ]] then
+        COUNTRY=$(get_json_value "$JSON" "country") && [[ ${COUNTRY:="Unknown"} ]]
+        CITY=$(get_json_value "$JSON" "city") && [[ ${CITY:="Unknown"} ]]
+        ASO=$(get_json_value "$JSON" "aso")
 
-    	msg "remote ip: $IP | $COUNTRY / $CITY | \"$ASO\""
-	else
-		err "service unavailable"
-	fi
+        msg "remote ip: $IP | $COUNTRY / $CITY | \"$ASO\""
+    else
+        err "service unavailable"
+    fi
 }
 
 show_bridges() {
@@ -614,20 +614,24 @@ autostart() {
 }
 
 usage() {
-    echo -e "Usage: torctl.sh COMMAND\n"
+    echo -e $(version)
     echo -e "A script to redirect all traffic through tor network\n"
+    echo -e "Usage: torctl.sh COMMAND\n"
     echo -e "Commands:"
-    echo -e "  start      - start tor and redirect all traffic through tor"
-    echo -e "  stop       - stop tor and redirect all traffic through clearnet"
-    echo -e "  status     - get tor service status"
-    echo -e "  restart    - restart tor and traffic rules"
-    echo -e "  autowipe   - enable memory wipe at shutdown"
-    echo -e "  autostart  - start torctl at startup"
-    echo -e "  ip         - get remote ip address"
-    echo -e "  chngid     - change tor identity"
-    echo -e "  chngmac    - change mac addresses of all interfaces"
-    echo -e "  rvmac      - revert mac addresses of all interfaces"
-    echo -e "  version    - print version of torctl and exit\n"
+    echo -e "start      - start tor and redirect all traffic through tor"
+    echo -e "start   --bridges <file> - start tor with bridges"
+    echo -e "stop       - stop tor and redirect all traffic through clearnet"
+    echo -e "status     - get tor service status"
+    echo -e "restart    - restart tor and traffic rules"
+    echo -e "restart --bridges <file> - restart tor with bridges"
+    echo -e "bridges    - print used bridges"
+    echo -e "autowipe   - enable memory wipe at shutdown"
+    echo -e "autostart  - start torctl at startup"
+    echo -e "ip         - get remote ip address info"
+    echo -e "chngid     - change tor identity"
+    echo -e "chngmac    - change mac addresses of all interfaces"
+    echo -e "rvmac      - revert mac addresses of all interfaces"
+    echo -e "version    - print version of torctl and exit\n"
 }
 
 main() {
