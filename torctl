@@ -156,6 +156,10 @@ get_ip() {
     msg "remote ip: $RADDR"
 }
 
+show_bridges() {
+    sed -n 's/^bridge //Ip' "$TORRC" | grep . || warn "bridges are not used"
+}
+
 backup_torrc() {
     warn "backing up tor config"
     mv "$TORRC" $BACKUPDIR/torrc.bak
@@ -668,6 +672,9 @@ main() {
         check_root
         check_backup_dir
         wipe
+        ;;
+    bridges)
+        show_bridges
         ;;
     *)
         usage

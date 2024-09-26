@@ -9,11 +9,12 @@
 #chngmac    - change mac addresses of all interfaces.
 #rvmac      - revert mac addresses of all interfaces.
 #version    - print version of torctl and exit."
+#bridges    - print used bridges
 
 _torctl()
 {
     local current options
-    options="start stop status restart autowipe autostart ip chngid chngmac rvmac version"
+    options="start stop status restart autowipe autostart ip chngid chngmac rvmac version bridges"
     current="${COMP_WORDS[COMP_CWORD]}"
     COMPREPLY=($(compgen -W "${options}" -- ${current}))
 }
