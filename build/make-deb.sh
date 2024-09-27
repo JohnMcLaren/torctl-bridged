@@ -15,11 +15,12 @@ DEBSUGGESTS=""
 DEBCONFLICTS=""
 DEBREPLACES="torctl"
 DEBDESCRIPTION="Script to redirect all traffic through Tor network including DNS queries for anonymizing entire system. \
- This version of the script supports adding bridges (input nodes) in case you have problems connecting to the Tor network."
+  This version of the script supports adding bridges (input nodes) in case you have problems connecting to the Tor network."
 DEBDIR="$DEBNAME"_"$DEBVERSION"_"$DEBARCH"
 
-echo "--- build: $DEBDIR.deb ---"
 set -e
+echo -e "Build: $DEBDIR.deb"
+echo -e "Date: `date +"%d.%m.%y %T"`\n"
 rm -rf SHA256SUMS
 
 ### Create directories ###
@@ -64,7 +65,7 @@ EOF
 
 dpkg-deb --build --root-owner-group $DEBDIR
 
-### Create package/s checksum ###
+### Write package/s checksum ###
 
 sha256sum $DEBDIR.deb >> SHA256SUMS
 
@@ -72,6 +73,6 @@ sha256sum $DEBDIR.deb >> SHA256SUMS
 
 rm -rf $DEBDIR
 
-echo "--- done ---"
+echo -e "\n--- Done ---"
 
 

@@ -155,7 +155,7 @@ wipe() {
 get_json_value() {
     echo $1 | jq -r ".$2 // empty" 2> /dev/null
 
-    if [[ $? == 127 ]] then # [ERR: 127] if prev command not found
+    if [[ $? == 127 ]]; then # [ERR: 127] if prev command not found
         echo $1 | awk 'BEGIN { FS="\""; RS="," }; { if ($2 == "'$2'") { print $4 } }'
     fi
 }
@@ -164,7 +164,7 @@ get_ip() {
     JSON=$(curl -s https://ident.me/json)
     IP=$(get_json_value "$JSON" "ip")
 
-    if [[ -n $IP ]] then
+    if [[ -n $IP ]]; then
         COUNTRY=$(get_json_value "$JSON" "country") && [[ ${COUNTRY:="Unknown"} ]]
         CITY=$(get_json_value "$JSON" "city") && [[ ${CITY:="Unknown"} ]]
         ASO=$(get_json_value "$JSON" "aso")
