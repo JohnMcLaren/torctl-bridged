@@ -12,7 +12,7 @@ DEBARCH="amd64" # List all: dpkg-architecture -L
 DEBDEPENDS="tor,iptables"
 DEBRECOMMENDS="obfs4proxy|snowflake-client|jq"
 DEBSUGGESTS=""
-DEBCONFLICTS=""
+DEBCONFLICTS="torctl"
 DEBREPLACES="torctl"
 DEBDESCRIPTION="Script to redirect all traffic through Tor network including DNS queries for anonymizing entire system. \
   This version of the script supports adding bridges (input nodes) in case you have problems connecting to the Tor network."
@@ -40,7 +40,7 @@ ln ../torctl $DEBDIR/usr/local/bin/
 
 ### Create links to pre/postinst shells ###
 
-# ln ./postinst.sh $DEBDIR/DEBIAN/postinst
+ln ./postinst.sh $DEBDIR/DEBIAN/postinst
 
 ### Patch TOR_UID & shell version ###
 
