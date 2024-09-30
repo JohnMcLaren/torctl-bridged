@@ -6,11 +6,11 @@ DEBFULLNAME=""
 DEBEMAIL=""
 DEBNAME="torctl-bridged"
 DEBVERSION="0.5.7-1"
-DEBSECTION="Networking"
+DEBSECTION="net"
 DEBHOMEPAGE="https://github.com/JohnMcLaren/torctl-bridged/"
 DEBARCH="amd64" # List all: dpkg-architecture -L
 DEBDEPENDS="tor,iptables"
-DEBRECOMMENDS="obfs4proxy|snowflake-client"
+DEBRECOMMENDS="obfs4proxy|snowflake-client|jq"
 DEBSUGGESTS=""
 DEBCONFLICTS=""
 DEBREPLACES="torctl"
@@ -25,16 +25,22 @@ rm -rf SHA256SUMS
 
 ### Create directories ###
 
+mkdir -p $DEBDIR/DEBIAN
 mkdir -p $DEBDIR/etc/systemd/system/
 mkdir -p $DEBDIR/usr/share/bash-completion/completions/
 mkdir -p $DEBDIR/usr/local/bin/
+mkdir -p $DEBDIR/usr/bin/
 
-### Copy release files ###
+### Create links to release files (hard-links only) ###
 
-cp -r ../service/* $DEBDIR/etc/systemd/system/
-cp ../bash-completion/torctl $DEBDIR/usr/share/bash-completion/completions/torctl
-cp ../PT/webtunnel/release/build/-/webtunnel-client $DEBDIR/usr/local/bin/webtunnel-client 2>/dev/null || echo "[WARN] The webtunnel-client plugin was not found and will not be included in this release package."
-cp ../torctl $DEBDIR/usr/local/bin/
+ln ../service/* $DEBDIR/etc/systemd/system/
+ln ../bash-completion/torctl $DEBDIR/usr/share/bash-completion/completions/torctl
+ln ../PT/webtunnel/release/build/-/webtunnel-client $DEBDIR/usr/bin/webtunnel-client 2>/dev/null || echo -e "\e[93m[ WARN ]\e[39m Plugin 'webtunnel-client' was not found and will not be included in this release package."
+ln ../torctl $DEBDIR/usr/local/bin/
+
+### Create links to pre/postinst shells ###
+
+# ln ./postinst.sh $DEBDIR/DEBIAN/postinst
 
 ### Patch TOR_UID & shell version ###
 
@@ -42,17 +48,25 @@ sed -i $DEBDIR/usr/local/bin/torctl \
     -e 's/VERSION=".*"/VERSION="torctl.sh v'$DEBVERSION' (bridged)"/' \
     -e 's/TOR_UID="tor"/TOR_UID="'$TOR_UID'"/'
 
+### Create md5sums & calc install size ###
+
+cd $DEBDIR
+md5sum $(find * -type f -not -path 'DEBIAN/*') > DEBIAN/md5sums
+DEBINSTALLSIZE=`du -sk --exclude=DEBIAN . | cut -f1`
+cd ..
+
 ### Create Debian control file ###
 
-mkdir -p $DEBDIR/DEBIAN
 cat << EOF | grep ': ..*' | tee "$DEBDIR/DEBIAN/control"
 Package: $DEBNAME
+Source: $DEBNAME ($DEBVERSION)
 Version: $DEBVERSION
+Architecture: $DEBARCH
 Maintainer: $DEBFULLNAME <$DEBEMAIL>
+Installed-Size: $DEBINSTALLSIZE
 Description: $DEBDESCRIPTION
 Section: $DEBSECTION
 Priority: optional
-Architecture: $DEBARCH
 Homepage: $DEBHOMEPAGE
 Depends: $DEBDEPENDS
 Recommends: $DEBRECOMMENDS

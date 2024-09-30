@@ -263,7 +263,7 @@ UseBridges 1
 ClientTransportPlugin obfs2,obfs3 exec /usr/bin/obfsproxy managed
 ClientTransportPlugin obfs4 exec /usr/bin/obfs4proxy managed
 ClientTransportPlugin snowflake exec /usr/bin/snowflake-client managed
-ClientTransportPlugin webtunnel exec /usr/local/bin/webtunnel-client managed
+ClientTransportPlugin webtunnel exec /usr/bin/webtunnel-client managed
 "$'\n'
         info "bridges file will be used: $1"
         while IFS= read -r line; do
