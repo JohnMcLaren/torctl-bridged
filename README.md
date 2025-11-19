@@ -1,3 +1,5 @@
+[![venture](https://img.shields.io/badge/Support_project-just_BUY_JML_Coin!-indigo?style=flat&logo=github)][venture-url]
+
 ## Description
 
 Script to redirect all traffic through the `Tor` network, including DNS-requests for anonymize entire system.
@@ -167,3 +169,4 @@ You can get in touch with the BlackArch Linux team. Just check out the following
 [build-url]: https://github.com/JohnMcLaren/torctl-bridged/tree/master/build/
 [bridges-url]: https://bridges.torproject.org/options
 [torproject-url]: https://www.torproject.org/
+[venture-url]: https://www.orca.so/?tokenIn=So11111111111111111111111111111111111111112&tokenOut=JMLCeiUjK64PMziqF8YiDNdky8PnrSG1waKY2LyQQKQ
