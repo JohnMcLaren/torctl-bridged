@@ -20,7 +20,7 @@ DEBDIR="$DEBNAME"_"$DEBVERSION"_"$DEBARCH"
 
 set -e
 echo -e "Build: $DEBDIR.deb"
-echo -e "Date: `date +"%d.%m.%y %T"`\n"
+echo -e "Date: $(date +"%d.%m.%y %T")\n"
 rm -rf SHA256SUMS
 
 ### Create directories ###
@@ -40,7 +40,7 @@ ln ../torctl $DEBDIR/usr/local/bin/
 
 ### Create links to pre/postinst shells ###
 
-ln ./postinst.sh $DEBDIR/DEBIAN/postinst
+ln ./postinst $DEBDIR/DEBIAN/postinst
 
 ### Patch TOR_UID & shell version ###
 
@@ -52,7 +52,7 @@ sed -i $DEBDIR/usr/local/bin/torctl \
 
 cd $DEBDIR
 md5sum $(find * -type f -not -path 'DEBIAN/*') > DEBIAN/md5sums
-DEBINSTALLSIZE=`du -sk --exclude=DEBIAN . | cut -f1`
+DEBINSTALLSIZE=$(du -sk --exclude=DEBIAN . | cut -f1)
 cd ..
 
 ### Create Debian control file ###

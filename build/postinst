@@ -18,7 +18,7 @@ tor_new_grants="$webtunnel_file Pix,"
 aa_status=$(aa-status --verbose 2> /dev/null)
 aa_error=$?
 
-if [[ $aa_error > 0 ]]; then
+if [[ $aa_error -gt 0 ]]; then
 	if [[ $aa_error == 4 ]]; then
 		echo -e "AppArmor: You do not have enough privilege to read the profile set."
 	elif [[ $aa_error == 127 ]]; then
@@ -35,7 +35,7 @@ fi
 if [[ ! $(grep "$webtunnel_file" $tor_profile_abstract $tor_profile $tor_profile_local) ]]; then
 	echo -e "\e[93m[[ Confirming Tor permissions ]]\e[39m"
 	echo -e "AppArmor installed and Tor don't have permissions for 'webtunnel-client'."
-	read -p $'\e[1mDo you agree to grant Tor permission to run '"$webtunnel_file"', installed by this package? [Y/n]: ' yn
+	read -rp $'\e[1mDo you agree to grant Tor permission to run '"$webtunnel_file"', installed by this package? [Y/n]: ' yn
 	
 	while true; do
 		case $yn in
@@ -56,7 +56,7 @@ if [[ ! $(grep "$webtunnel_file" $tor_profile_abstract $tor_profile $tor_profile
 			echo -e "\e[91m[ DENIED ]\e[39m Tor permissions will not be changed."
 			break
 			;;
-		*) read -p $'\e[21mPlease answer \e[1mYes\e[21m or \e[1mNo\e[21m: ' yn
+		*) read -rp $'\e[21mPlease answer \e[1mYes\e[21m or \e[1mNo\e[21m: ' yn
 			;;
 		esac
 	done
